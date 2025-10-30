@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Istruzioni</title>
+  <link rel="stylesheet" href="stile.css">
+</head>
+<body>
+  <div class="istruzioni">
+    <h2>Istruzioni per la Lettura</h2>
+    <div id="testoIstruzioni">Caricamento...</div>
+    <button onclick="window.location.href='pagina2.html'">Torna indietro</button>
+  </div>
+
+  <script>
+    fetch("asset/Istruzioni.txt")
+      .then(r => r.text())
+      .then(t => document.getElementById("testoIstruzioni").innerText = t)
+      .catch(() => document.getElementById("testoIstruzioni").innerText = "Impossibile caricare il file delle istruzioni.");
+  </script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Rotazione Tarocchi</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #111;
+      overflow: hidden;
+    }
+
+    .container {
+      position: relative;
+      width: 700px;
+      height: 700px;
+    }
+
+    .rotating-image {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      animation: rotate 30s linear infinite reverse;
+    }
+
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .button-center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: gold;
+      color: black;
+      border: none;
+      border-radius: 50px;
+      padding: 15px 40px;
+      font-size: 22px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+      transition: 0.3s;
+    }
+
+    .button-center:hover {
+      background-color: #ffcc00;
+      box-shadow: 0 0 40px rgba(255, 215, 0, 1);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Usa percorso relativo -->
+    <img src="asset/tarot_corona.jpg" alt="Corona Tarocchi" class="rotating-image">
+    <button class="button-center" onclick="window.location.href='pagina2.html'">Inizia</button>
+  </div>
+</body>
+</html>

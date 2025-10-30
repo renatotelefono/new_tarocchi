@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Interpretazione dei Tarocchi</title>
+  <link rel="stylesheet" href="stile.css">
+  <style>
+    body {
+      background-color: #000;
+      color: #f4e2b3;
+      font-family: 'Cinzel Decorative', 'Playfair Display', serif;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+
+    .contenitore-interpretazione {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 40px;
+      width: 1000px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .titolo-fase {
+      color: gold;
+      font-size: 28px;
+      text-shadow: 0 0 10px gold;
+      margin-bottom: 30px;
+    }
+
+    /* --- NUOVO: layout carta + video affiancati --- */
+    .contenitore-visivo {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 40px;
+      margin-bottom: 30px;
+      flex-wrap: wrap; /* così resta ok anche su schermi più piccoli */
+    }
+
+    .carta-immagine {
+      width: 240px;
+      height: 360px;
+      border-radius: 15px;
+      box-shadow: 0 0 25px gold;
+      transition: transform 0.8s;
+    }
+
+    video {
+      width: 600px;
+      height: auto;
+      border-radius: 15px;
+      box-shadow: 0 0 25px gold;
+    }
+
+    .testo-descrizione {
+      width: 800px;
+      text-align: justify;
+      line-height: 1.6;
+      font-size: 18px;
+      background-color: rgba(20, 20, 20, 0.8);
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 0 15px gold;
+      margin-top: 10px;
+      white-space: pre-wrap;
+    }
+
+    .bottone-avanti {
+      margin-top: 40px;
+      background: linear-gradient(145deg, #c9a019, #f4e2b3);
+      border: none;
+      border-radius: 20px;
+      padding: 10px 25px;
+      color: #111;
+      font-weight: bold;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
+    }
+
+    .bottone-avanti:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 20px gold;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="contenitore-interpretazione">
+    <h1 class="titolo-fase" id="titolo-fase">Passato</h1>
+
+    <!-- Carta + Video sulla stessa riga -->
+    <div class="contenitore-visivo">
+      <img id="imgCarta" class="carta-immagine" src="">
+      <video id="videoCarta" controls></video>
+    </div>
+
+    <div id="descrizione" class="testo-descrizione"></div>
+    <button class="bottone-avanti" id="btnAvanti" onclick="avanti()">Avanti</button>
+  </div>
+
+  <script>
+    let lettura = JSON.parse(sessionStorage.getItem("lettura"));
+    let fasi = ["passato", "presente", "futuro"];
+    let faseCorrente = 0;
+
+    function mostraCarta() {
+      let fase = fasi[faseCorrente];
+      let carta = lettura[fase];
+      let titolo = fase.charAt(0).toUpperCase() + fase.slice(1);
+
+      document.getElementById("titolo-fase").innerText = titolo;
+
+      // Mostra immagine
+      const img = document.getElementById("imgCarta");
+      img.src = carta.img;
+      img.style.transform = carta.dritta ? "rotate(0deg)" : "rotate(180deg)";
+
+      // Costruisce percorsi file
+      let orientamento = carta.dritta ? "" : "_r";
+      let videoFile = `asset/video_it/${carta.nome}${orientamento}_${titolo}.mp4`;
+      let descrizioneFile = `asset/descrizione_it/${carta.nome}${orientamento}_${titolo}.md`;
+
+      // Correzione doppio numero (es. 01_01_il_mago → 01_il_mago)
+      videoFile = videoFile.replace(/^(\d{2})_\1_/, "$1_");
+      descrizioneFile = descrizioneFile.replace(/^(\d{2})_\1_/, "$1_");
+
+      // Imposta video
+      const video = document.getElementById("videoCarta");
+      video.src = videoFile;
+
+      // Carica descrizione markdown
+      fetch(descrizioneFile)
+        .then(r => {
+          if (!r.ok) throw new Error("File non trovato: " + descrizioneFile);
+          return r.text();
+        })
+        .then(testo => {
+          document.getElementById("descrizione").innerText = testo;
+        })
+        .catch(err => {
+          document.getElementById("descrizione").innerText =
+            "⚠️ Errore nel caricamento del file:\n" + descrizioneFile;
+        });
+
+      // Aggiorna pulsante
+      const btn = document.getElementById("btnAvanti");
+      btn.innerText = faseCorrente < 2 ? "Avanti" : "Fine";
+    }
+
+    function avanti() {
+      if (faseCorrente < 2) {
+        faseCorrente++;
+        mostraCarta();
+      } else {
+        window.location.href = "pagina2.html";
+      }
+    }
+
+    window.addEventListener("DOMContentLoaded", mostraCarta);
+  </script>
+
+</body>
+</html>

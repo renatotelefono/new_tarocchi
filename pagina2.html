@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Lettura dei Tarocchi</title>
+  <link rel="stylesheet" href="stile.css">
+  <script defer src="script.js"></script>
+</head>
+<body>
+  <div class="barra">
+    <button onclick="window.location.href='istruzioni.html'">Istruzioni</button>
+    <button onclick="mescolaCarte()">Mescola</button>
+    <button id="btnInterpretazione" onclick="interpreta()" disabled>Interpretazione</button>
+    <button onclick="reset()">Reset</button>
+  </div>
+
+  <main class="area-lettura">
+    <section class="slot-container">
+      <div class="slot" id="passato"><h3>Passato</h3></div>
+      <div class="slot" id="presente"><h3>Presente</h3></div>
+      <div class="slot" id="futuro"><h3>Futuro</h3></div>
+    </section>
+
+    <!-- Contenitore del mazzo -->
+    <section id="mazzo" class="mazzo area-mazzo"></section>
+  </main>
+</body>
+</html>
