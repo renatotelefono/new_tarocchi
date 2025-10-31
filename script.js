@@ -57,31 +57,42 @@ function mescolaCarte() {
   const container = document.getElementById("mazzo");
   const carte = Array.from(container.querySelectorAll("img"));
 
-  // logica del mazzo (mescola)
+  // Aggiorna l’orientamento casuale e mescola il mazzo
   mazzo.forEach(c => (c.dritta = Math.random() < 0.5));
   mazzo.sort(() => Math.random() - 0.5);
 
-  // calcolo posizione della prima carta come punto di riferimento
+  // Seleziona la prima carta come punto di riferimento per l’effetto “impila”
   const primaCarta = carte[0];
   if (!primaCarta) return;
-
   const rectBase = primaCarta.getBoundingClientRect();
 
-  // trasformiamo tutte le carte in posizione assoluta
+  // Anima lo spostamento delle carte sopra la prima
   carte.forEach(img => {
     const rect = img.getBoundingClientRect();
     const dx = rectBase.left - rect.left;
     const dy = rectBase.top - rect.top;
     img.style.transform = `translate(${dx}px, ${dy}px)`;
+    img.style.transition = "transform 0.6s ease";
     img.style.zIndex = 10;
   });
 
-  // dopo 1.5s: ridistribuzione visiva
+  // Dopo 1 secondo, ridistribuisce le carte
   setTimeout(() => {
-    container.classList.add("ridistribuita");
     renderCarteCoperte();
-  }, 1500);
+
+    // 🔮 Disattiva visivamente le carte già selezionate
+    const tutteLeCarte = document.querySelectorAll("#mazzo img");
+    selezionate.forEach(sel => {
+      const index = mazzo.findIndex(c => c.nome === sel.nome);
+      if (index >= 0 && tutteLeCarte[index]) {
+        tutteLeCarte[index].style.pointerEvents = "none";
+        tutteLeCarte[index].style.opacity = "0.4";
+        tutteLeCarte[index].style.filter = "grayscale(100%)";
+      }
+    });
+  }, 1000);
 }
+
 
 /* === Selezione carta === */
 function selezionaCarta(index) {
@@ -122,27 +133,48 @@ function interpreta() {
 }
 
 /* === Reset === */
+/* === Reset === */
 function reset() {
-  // Pulisce tutto
+  // Cancella lo stato delle selezioni
   selezionate = [];
   sessionStorage.removeItem("lettura");
   sessionStorage.removeItem("pdfAbilitato");
 
-  // Svuota gli slot
+  // Ripulisce gli slot
   ["passato", "presente", "futuro"].forEach(id => {
     const slot = document.getElementById(id);
     slot.innerHTML = `<h3>${id.charAt(0).toUpperCase() + id.slice(1)}</h3>`;
   });
 
-  // Disabilita pulsanti
-  document.getElementById("btnInterpretazione").disabled = true;
-  document.getElementById("btnPdf").disabled = true;
+  // Disabilita i pulsanti
+  const btnInterp = document.getElementById("btnInterpretazione");
+  if (btnInterp) btnInterp.disabled = true;
+  const btnPdf = document.getElementById("btnPdf");
+  if (btnPdf) btnPdf.disabled = true;
 
-  // Ricrea il mazzo di carte coperte
-  mescolaCarte();
+  // Cancella il contenitore e rigenera tutte le carte coperte
+  const container = document.getElementById("mazzo");
+  container.innerHTML = "";
+
+  // Reinzializza completamente il mazzo e rende tutte le carte cliccabili
+  inizializzaCarte();
+
+  // Dopo il render, assicurati che tutte le carte siano attive
+  setTimeout(() => {
+    const tutteLeCarte = document.querySelectorAll("#mazzo img");
+    tutteLeCarte.forEach(img => {
+      img.style.pointerEvents = "auto";
+      img.style.opacity = "1";
+      img.style.filter = "none";
+    });
+  }, 300);
 }
 
-
-
 /* === Avvio === */
-window.addEventListener("DOMContentLoaded", inizializzaCarte);
+window.addEventListener("DOMContentLoaded", () => {
+  inizializzaCarte();
+});
+
+
+
+

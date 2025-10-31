@@ -118,7 +118,7 @@
     let lettura = JSON.parse(sessionStorage.getItem("lettura"));
     if (!lettura) {
       alert("Nessuna lettura trovata. Torna alla pagina principale.");
-      window.location.href = "pagina2.html";
+      window.location.href = "master.html";
     }
 
     const fasi = ["passato", "presente", "futuro"];
@@ -193,7 +193,7 @@
 
     // 🔚 TORNA ALLA PAGINA PRINCIPALE
     function fine() {
-      window.location.href = "pagina2.html";
+      window.location.href = "master.html";
     }
 
     window.addEventListener("DOMContentLoaded", mostraCarta);
