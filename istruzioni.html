@@ -4,19 +4,119 @@
   <meta charset="UTF-8">
   <title>Istruzioni</title>
   <link rel="stylesheet" href="stile.css">
+  <style>
+    body {
+      background-color: #000;
+      color: #40E0D0;
+      font-family: 'Playfair Display', serif;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+
+    .istruzioni {
+      max-width: 900px;
+      margin: 40px auto;
+      background-color: rgba(20, 20, 20, 0.9);
+      border: 2px solid #40E0D0;
+      border-radius: 15px;
+      padding: 30px;
+      box-shadow: 0 0 25px #40E0D0;
+      text-align: left;
+      line-height: 1.4;
+      font-size: 22px;  /* testo più grande */
+      color: #40E0D0;
+    }
+
+    .istruzioni h2 {
+      color: #40E0D0;
+      text-align: center;
+      text-shadow: 0 0 12px #40E0D0;
+      margin-bottom: 25px;
+      font-size: 30px;
+    }
+
+    #testoIstruzioni p {
+      margin-bottom: 0.6em; /* meno spazio tra i paragrafi */
+    }
+
+    #testoIstruzioni ul {
+      margin-left: 25px;
+      list-style-type: "🔹 ";
+      color: #40E0D0;
+    }
+
+    button {
+      display: block;
+      margin: 30px auto 0;
+      padding: 12px 30px;
+      background-color: #40E0D0;
+      color: #000;
+      font-weight: bold;
+      font-size: 18px;
+      border-radius: 15px;
+      border: none;
+      box-shadow: 0 0 20px #40E0D0;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 30px #40E0D0;
+    }
+
+    /* Stile per la stampa */
+    @media print {
+      body {
+        background: white;
+        color: black;
+      }
+      .istruzioni {
+        background: white;
+        color: black;
+        border: none;
+        box-shadow: none;
+        font-size: 14pt;
+      }
+      button {
+        display: none;
+      }
+    }
+
+.centrato {
+  text-align: center;
+  font-weight: bold;
+  color: #40E0D0;
+  text-shadow: 0 0 10px #40E0D0;
+  margin: 20px 0 10px;
+}
+
+
+
+  </style>
 </head>
 <body>
   <div class="istruzioni">
     <h2>Istruzioni per la Lettura</h2>
     <div id="testoIstruzioni">Caricamento...</div>
-    <button onclick="window.location.href='pagina2.html'">Torna indietro</button>
+    <button onclick="window.location.href='pagina2.html'"> Torna indietro</button>
   </div>
 
-  <script>
-    fetch("asset/Istruzioni.txt")
-      .then(r => r.text())
-      .then(t => document.getElementById("testoIstruzioni").innerText = t)
-      .catch(() => document.getElementById("testoIstruzioni").innerText = "Impossibile caricare il file delle istruzioni.");
-  </script>
+<script>
+  fetch("asset/Istruzioni.txt")
+    .then(r => r.text())
+    .then(t => {
+      let testoHTML = t
+        .replace(/\*\*(.*?)\*\*/g, '<p class="centrato"><b>$1</b></p>')  // centrare e grassetto
+        .replace(/\n\n/g, '</p><p>')
+        .replace(/\n/g, '<br>');
+      document.getElementById("testoIstruzioni").innerHTML = `<p>${testoHTML}</p>`;
+    })
+    .catch(() => {
+      document.getElementById("testoIstruzioni").innerText = "Impossibile caricare il file delle istruzioni.";
+    });
+</script>
+
 </body>
 </html>

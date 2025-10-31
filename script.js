@@ -21,12 +21,12 @@ function inizializzaCarte() {
   renderCarteCoperte();
 }
 
-/* === Render delle 22 carte in 3 righe (8 + 8 + 6) === */
+/* === Render delle 22 carte in 4  righe (6, 6, 6, 4) === */
 function renderCarteCoperte() {
   const container = document.getElementById("mazzo");
   container.innerHTML = "";
 
-  const distribuzione = [8, 8, 6];
+  const distribuzione = [6, 6, 6, 4];
   let index = 0;
 
   distribuzione.forEach(qta => {

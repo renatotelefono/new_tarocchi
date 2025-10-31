@@ -1,6 +1,6 @@
 body {
   background-color: #000;
-  color: #f4e2b3;
+  color:#40E0D0;
   font-family: 'Cinzel Decorative', 'Playfair Display', serif;
   text-align: center;
   margin: 0;
@@ -10,14 +10,14 @@ body {
 .barra {
   background-color: #111;
   padding: 12px;
-  box-shadow: 0 0 15px gold;
+  box-shadow: 0 0 15px #40E0D0;
   display: flex;
   justify-content: center;
   gap: 20px;
 }
 
 .barra button {
-  background: linear-gradient(145deg, #c9a019, #f4e2b3);
+  background-color: #40E0D0;
   border: none;
   border-radius: 20px;
   padding: 10px 25px;
@@ -31,7 +31,7 @@ body {
 
 .barra button:hover {
   transform: scale(1.1);
-  box-shadow: 0 0 20px gold;
+  box-shadow: 0 0 20px #40E0D0;
 }
 
 /* Layout principale */
@@ -50,22 +50,23 @@ body {
 }
 
 .slot {
-  width: 260px;
-  height: 360px;
-  border: 2px solid gold;
+  width: 230px;
+  height: 386px; /* 230 × 1.68 */
+  border: 2px solid #40E0D0 ;
   border-radius: 15px;
   background-color: #111;
-  box-shadow: 0 0 20px gold;
+  box-shadow: 0 0 5px #40E0D0;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
 }
 
+
 .slot h3 {
-  color: gold;
+  color: #40E0D0;
   margin-top: 10px;
-  text-shadow: 0 0 10px gold;
+  text-shadow: 0 0 2px#40E0D0;
 }
 
 /* Mazzo */
@@ -85,13 +86,14 @@ body {
 }
 
 .carta {
-  width: 80px;
-  height: 120px;
+  width: 120px;
+  height: 201px; /* proporzione corretta 1:1.68 */
   cursor: pointer;
   border-radius: 8px;
-  box-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
-  transition: transform 0.8s ease, left 0.8s ease, top 0.8s ease;
+  box-shadow: 0 0 10px #40E0D0;
+  transition: transform 0.8s ease;
 }
+
 
 .carta:hover {
   transform: scale(1.08);
