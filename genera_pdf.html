@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Genera PDF - Lettura dei Tarocchi</title>
+  <link rel="stylesheet" href="stile.css">
+  <!-- Libreria jsPDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <style>
+    body {
+      background-color: #000;
+      color: #40E0D0;
+      font-family: 'Playfair Display', serif;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+
+    .contenitore-pdf {
+      margin-top: 100px;
+    }
+
+    button {
+      margin: 20px;
+      padding: 12px 30px;
+      background-color: #40E0D0;
+      color: #000;
+      font-weight: bold;
+      font-size: 18px;
+      border-radius: 15px;
+      border: none;
+      box-shadow: 0 0 15px #40E0D0;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 25px #40E0D0;
+    }
+  </style>
+</head>
+<body>
+  <div class="contenitore-pdf">
+    <h2>Generazione PDF della Lettura</h2>
+    <p>Questo PDF conterrà le tre carte scelte e la loro interpretazione.</p>
+
+    <button id="btnGenera">Genera</button>
+    <button onclick="window.location.href='pagina2.html'">Torna indietro</button>
+  </div>
+
+  <script>
+    const { jsPDF } = window.jspdf;
+
+    document.getElementById("btnGenera").addEventListener("click", async () => {
+      const lettura = JSON.parse(sessionStorage.getItem("lettura"));
+      if (!lettura) {
+        alert("Non è stata trovata alcuna lettura. Torna indietro e seleziona tre carte.");
+        return;
+      }
+
+      const doc = new jsPDF();
+      let y = 20;
+
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(18);
+      doc.text("Lettura dei Tarocchi - Metodo delle Tre Carte", 105, y, { align: "center" });
+      y += 15;
+
+      const posizioni = ["passato", "presente", "futuro"];
+
+      for (const pos of posizioni) {
+        const carta = lettura[pos];
+        if (!carta) continue;
+
+        doc.setFontSize(14);
+        doc.text(`${pos.charAt(0).toUpperCase() + pos.slice(1)}: ${carta.nome}`, 20, y);
+        y += 10;
+
+        // Aggiunge immagine
+        const img = new Image();
+        img.src = carta.img;
+        await new Promise(r => (img.onload = r));
+        doc.addImage(img, "JPEG", 20, y, 40, 67);
+
+        // Carica descrizione dal file .md
+        const orientamento = carta.dritta ? "" : "_r";
+        const nomeFile = `${carta.nome}${orientamento}_${pos.charAt(0).toUpperCase() + pos.slice(1)}.md`;
+
+        try {
+          const resp = await fetch(`asset/descrizione_it/${nomeFile}`);
+          const testo = await resp.text();
+          const testoPulito = testo.replace(/\n+/g, " ").trim();
+          const linee = doc.splitTextToSize(testoPulito, 140);
+          doc.setFont("helvetica", "normal");
+          doc.setFontSize(12);
+          doc.text(linee, 70, y + 10);
+        } catch {
+          doc.text("Descrizione non disponibile.", 70, y + 10);
+        }
+
+        y += 90;
+      }
+
+      doc.save("lettura_tarocchi.pdf");
+    });
+  </script>
+</body>
+</html>

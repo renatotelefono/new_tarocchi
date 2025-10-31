@@ -100,9 +100,11 @@ function selezionaCarta(index) {
   slot.innerHTML = "";
   slot.appendChild(img);
 
-  if (selezionate.length === 3) {
-    document.getElementById("btnInterpretazione").disabled = false;
-  }
+ if (selezionate.length === 3) {
+  document.getElementById("btnInterpretazione").disabled = false;
+  document.getElementById("btnPdf").disabled = false;
+}
+
 }
 
 /* === Interpretazione === */
@@ -118,13 +120,15 @@ function interpreta() {
 /* === Reset === */
 function reset() {
   selezionate = [];
+  document.getElementById("mazzo").innerHTML = "";
   ["passato", "presente", "futuro"].forEach(id => {
     const slot = document.getElementById(id);
     slot.innerHTML = `<h3>${id.charAt(0).toUpperCase() + id.slice(1)}</h3>`;
   });
   document.getElementById("btnInterpretazione").disabled = true;
-  renderCarteCoperte();
+  document.getElementById("btnPdf").disabled = true;
 }
+
 
 /* === Avvio === */
 window.addEventListener("DOMContentLoaded", inizializzaCarte);
