@@ -88,24 +88,28 @@ function selezionaCarta(index) {
   if (selezionate.length >= 3) return;
 
   const carta = mazzo[index];
+
+  // Disabilita la carta selezionata (non più cliccabile)
+  const imgSelezionata = document.querySelectorAll("#mazzo img")[index];
+  imgSelezionata.style.pointerEvents = "none";
+  imgSelezionata.style.opacity = "0.5";
+
   selezionate.push(carta);
 
   const slotId = ["passato", "presente", "futuro"][selezionate.length - 1];
   const slot = document.getElementById(slotId);
-
   const img = document.createElement("img");
   img.src = carta.img;
   img.className = "carta-scoperta";
   if (!carta.dritta) img.style.transform = "rotate(180deg)";
-  slot.innerHTML = "";
+  slot.innerHTML = `<h3>${slot.querySelector("h3").textContent}</h3>`;
   slot.appendChild(img);
 
- if (selezionate.length === 3) {
-  document.getElementById("btnInterpretazione").disabled = false;
-  document.getElementById("btnPdf").disabled = false;
+  if (selezionate.length === 3) {
+    document.getElementById("btnInterpretazione").disabled = false;
+  }
 }
 
-}
 
 /* === Interpretazione === */
 function interpreta() {
@@ -119,15 +123,25 @@ function interpreta() {
 
 /* === Reset === */
 function reset() {
+  // Pulisce tutto
   selezionate = [];
-  document.getElementById("mazzo").innerHTML = "";
+  sessionStorage.removeItem("lettura");
+  sessionStorage.removeItem("pdfAbilitato");
+
+  // Svuota gli slot
   ["passato", "presente", "futuro"].forEach(id => {
     const slot = document.getElementById(id);
     slot.innerHTML = `<h3>${id.charAt(0).toUpperCase() + id.slice(1)}</h3>`;
   });
+
+  // Disabilita pulsanti
   document.getElementById("btnInterpretazione").disabled = true;
   document.getElementById("btnPdf").disabled = true;
+
+  // Ricrea il mazzo di carte coperte
+  mescolaCarte();
 }
+
 
 
 /* === Avvio === */

@@ -49,17 +49,19 @@ body {
   margin-bottom: 60px;
 }
 
+/* 🔮 Slot delle carte rivelate */
 .slot {
-  width: 230px;
-  height: 386px; /* 230 × 1.68 */
-  border: 2px solid #40E0D0 ;
-  border-radius: 15px;
-  background-color: #111;
-  box-shadow: 0 0 5px #40E0D0;
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  justify-content: flex-start;
+  flex-direction: column;
+  width: 300px;         /* dimensione coerente */
+  height: 500px;
+  border: 2px solid #40E0D0;
+  border-radius: 15px;
+  box-shadow: 0 0 20px #40E0D0;
+  background-color: rgba(0, 0, 0, 0.4);
+  margin: 10px;
 }
 
 
@@ -99,9 +101,14 @@ body {
   transform: scale(1.08);
 }
 
+/* 🔮 Carte scoperte */
 .carta-scoperta {
-  width: 100%;
-  height: 100%;
+  max-width: 90%;
+  max-height: 90%;
+  object-fit: contain;
+  border-radius: 10px;
+  box-shadow: 0 0 15px #40E0D0;
+  transition: transform 0.4s ease;
 }
 
 /* === Effetto "impila sulla prima" === */

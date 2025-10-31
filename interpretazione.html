@@ -31,24 +31,22 @@
       margin-bottom: 30px;
     }
 
-    /* --- NUOVO: layout carta + video affiancati --- */
     .contenitore-visivo {
       display: flex;
       justify-content: center;
       align-items: flex-start;
       gap: 40px;
       margin-bottom: 30px;
-      flex-wrap: wrap; /* così resta ok anche su schermi più piccoli */
+      flex-wrap: wrap;
     }
 
- .carta-immagine {
-  width: 240px;
-  height: 403px;
-  border-radius: 15px;
-  box-shadow: 0 0 25px #40E0D0;
-  transition: transform 0.8s;
-}
-
+    .carta-immagine {
+      width: 240px;
+      height: 403px;
+      border-radius: 15px;
+      box-shadow: 0 0 25px #40E0D0;
+      transition: transform 0.8s;
+    }
 
     video {
       width: 600px;
@@ -70,8 +68,15 @@
       white-space: pre-wrap;
     }
 
-    .bottone-avanti {
+    .pulsanti-finali {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 25px;
       margin-top: 40px;
+    }
+
+    .bottone-avanti {
       background-color: #40E0D0;
       border: none;
       border-radius: 20px;
@@ -102,56 +107,55 @@
     </div>
 
     <div id="descrizione" class="testo-descrizione"></div>
-    <button class="bottone-avanti" id="btnAvanti" onclick="avanti()">Avanti</button>
+
+    <!-- Contenitore pulsanti -->
+    <div id="pulsantiContainer">
+      <button class="bottone-avanti" id="btnAvanti" onclick="avanti()">Avanti</button>
+    </div>
   </div>
 
   <script>
     let lettura = JSON.parse(sessionStorage.getItem("lettura"));
-    let fasi = ["passato", "presente", "futuro"];
+    if (!lettura) {
+      alert("Nessuna lettura trovata. Torna alla pagina principale.");
+      window.location.href = "pagina2.html";
+    }
+
+    const fasi = ["passato", "presente", "futuro"];
     let faseCorrente = 0;
 
     function mostraCarta() {
-      let fase = fasi[faseCorrente];
-      let carta = lettura[fase];
-      let titolo = fase.charAt(0).toUpperCase() + fase.slice(1);
+      const fase = fasi[faseCorrente];
+      const carta = lettura[fase];
+      const titolo = fase.charAt(0).toUpperCase() + fase.slice(1);
 
       document.getElementById("titolo-fase").innerText = titolo;
 
-      // Mostra immagine
       const img = document.getElementById("imgCarta");
       img.src = carta.img;
       img.style.transform = carta.dritta ? "rotate(0deg)" : "rotate(180deg)";
 
-      // Costruisce percorsi file
       let orientamento = carta.dritta ? "" : "_r";
       let videoFile = `asset/video_it/${carta.nome}${orientamento}_${titolo}.mp4`;
       let descrizioneFile = `asset/descrizione_it/${carta.nome}${orientamento}_${titolo}.md`;
 
-      // Correzione doppio numero (es. 01_01_il_mago → 01_il_mago)
+      // Correzione nomi tipo 01_01_il_mago -> 01_il_mago
       videoFile = videoFile.replace(/^(\d{2})_\1_/, "$1_");
       descrizioneFile = descrizioneFile.replace(/^(\d{2})_\1_/, "$1_");
 
-      // Imposta video
       const video = document.getElementById("videoCarta");
       video.src = videoFile;
 
-      // Carica descrizione markdown
       fetch(descrizioneFile)
         .then(r => {
-          if (!r.ok) throw new Error("File non trovato: " + descrizioneFile);
+          if (!r.ok) throw new Error("File non trovato");
           return r.text();
         })
-        .then(testo => {
-          document.getElementById("descrizione").innerText = testo;
-        })
-        .catch(err => {
-          document.getElementById("descrizione").innerText =
-            "⚠️ Errore nel caricamento del file:\n" + descrizioneFile;
-        });
+        .then(testo => document.getElementById("descrizione").innerText = testo)
+        .catch(() => document.getElementById("descrizione").innerText = "⚠️ File non trovato: " + descrizioneFile);
 
-      // Aggiorna pulsante
       const btn = document.getElementById("btnAvanti");
-      btn.innerText = faseCorrente < 2 ? "Avanti" : "Fine";
+      if (btn) btn.innerText = faseCorrente < 2 ? "Avanti" : "Fine";
     }
 
     function avanti() {
@@ -159,8 +163,37 @@
         faseCorrente++;
         mostraCarta();
       } else {
-        window.location.href = "pagina2.html";
+        mostraPulsantiFinali();
       }
+    }
+
+    function mostraPulsantiFinali() {
+      const container = document.getElementById("pulsantiContainer");
+      container.innerHTML = `
+        <div class="pulsanti-finali">
+          <button class="bottone-avanti" onclick="rileggi()">🔁 Rileggi</button>
+          <button class="bottone-avanti" onclick="generaPDF()">📜 Genera PDF</button>
+          <button class="bottone-avanti" onclick="fine()">🔚 Fine</button>
+        </div>
+      `;
+    }
+
+    // 🔁 RICOMINCIA LA LETTURA DAL PASSATO
+    function rileggi() {
+      faseCorrente = 0;
+      mostraCarta();
+      const container = document.getElementById("pulsantiContainer");
+      container.innerHTML = `<button class="bottone-avanti" id="btnAvanti" onclick="avanti()">Avanti</button>`;
+    }
+
+    // 📜 GENERA PDF
+    function generaPDF() {
+      window.location.href = "genera_pdf.html";
+    }
+
+    // 🔚 TORNA ALLA PAGINA PRINCIPALE
+    function fine() {
+      window.location.href = "pagina2.html";
     }
 
     window.addEventListener("DOMContentLoaded", mostraCarta);
