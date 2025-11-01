@@ -1,6 +1,6 @@
 body {
   background-color: #000;
-  color:#40E0D0;
+  color: #40E0D0;
   font-family: 'Cinzel Decorative', 'Playfair Display', serif;
   text-align: center;
   margin: 0;
@@ -68,7 +68,8 @@ body {
 .slot h3 {
   color: #40E0D0;
   margin-top: 10px;
-  text-shadow: 0 0 2px#40E0D0;
+  text-shadow: 0 0 2px #40E0D0;
+  /* font-family rimosso per ereditare il font globale */
 }
 
 /* Mazzo */
